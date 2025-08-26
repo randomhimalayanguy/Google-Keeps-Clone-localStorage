@@ -47,7 +47,7 @@ class NotesCard extends ConsumerWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              MarkdownBody(data: notes[index].content),
+              Text(notes[index].content, maxLines: 16),
             ],
           ),
         ),

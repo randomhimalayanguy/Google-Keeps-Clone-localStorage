@@ -17,7 +17,7 @@ class SearchBar extends StatelessWidget {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: "Search your notes",
-            hintStyle: TextStyle(color: Colors.grey.shade600),
+            // hintStyle: TextStyle(color: Colors.grey.shade600),
           ),
         ),
       ),
