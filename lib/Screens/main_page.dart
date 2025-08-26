@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notes_app/Model/note_model.dart';
 import 'package:notes_app/Providers/notes_provider.dart';
+import 'package:notes_app/Providers/search_query_provider.dart';
+import 'package:notes_app/Providers/searched_notes_provider.dart';
 import 'package:notes_app/Providers/selected_notes_provider.dart';
 import 'package:notes_app/Screens/notes_page.dart';
 import 'package:notes_app/Widgets/notes_card.dart';
@@ -15,7 +17,7 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedNotes = ref.watch(selectedNotesProvider);
-    final notes = ref.watch(notesProvider);
+    final notes = ref.watch(serachedNotesProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: Column(
@@ -72,7 +74,11 @@ class MainApp extends ConsumerWidget {
               floating: true,
               snap: true,
               title: (selectedNotes.isEmpty)
-                  ? SearchBar()
+                  ? TextField(
+                      onChanged: (value) =>
+                          ref.read(queryProvider.notifier).state = value,
+                    )
+                  // ? SearchBar()
                   : SelectionBar(selectedNotes: selectedNotes),
             ),
             SliverPadding(
@@ -82,7 +88,7 @@ class MainApp extends ConsumerWidget {
                 childCount: notes.length,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                itemBuilder: (context, index) => NotesCard(index: index),
+                itemBuilder: (context, index) => NotesCard(note: notes[index]),
               ),
             ),
           ],
