@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notes_app/Model/note_model.dart';
 import 'package:notes_app/Providers/notes_provider.dart';
-import 'package:notes_app/Providers/search_query_provider.dart';
 import 'package:notes_app/Providers/searched_notes_provider.dart';
 import 'package:notes_app/Providers/selected_notes_provider.dart';
 import 'package:notes_app/Screens/notes_page.dart';
 import 'package:notes_app/Widgets/notes_card.dart';
+import 'package:notes_app/Widgets/searchbar_widget.dart';
 import 'package:notes_app/Widgets/selection_bar_widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -70,15 +70,12 @@ class MainApp extends ConsumerWidget {
           slivers: [
             SliverToBoxAdapter(child: SizedBox(height: 20)),
             SliverAppBar(
+              backgroundColor: Colors.white,
               centerTitle: true,
               floating: true,
               snap: true,
               title: (selectedNotes.isEmpty)
-                  ? TextField(
-                      onChanged: (value) =>
-                          ref.read(queryProvider.notifier).state = value,
-                    )
-                  // ? SearchBar()
+                  ? SearchBarWidget()
                   : SelectionBar(selectedNotes: selectedNotes),
             ),
             SliverPadding(

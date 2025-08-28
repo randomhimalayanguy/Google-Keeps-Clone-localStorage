@@ -91,6 +91,7 @@ class _NewNotePageState extends ConsumerState<NotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         actions: [
           IconButton(onPressed: save, icon: Icon(Icons.save)),
           IconButton(
@@ -112,9 +113,9 @@ class _NewNotePageState extends ConsumerState<NotePage> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Title",
-                hintStyle: TextStyle(fontSize: 28),
+                hintStyle: TextStyle(fontSize: 26),
               ),
-              style: TextStyle(fontSize: 28),
+              style: TextStyle(fontSize: 26),
             ),
             Expanded(
               child: TextField(
@@ -123,11 +124,11 @@ class _NewNotePageState extends ConsumerState<NotePage> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: "Note",
-                  hintStyle: TextStyle(fontSize: 22),
+                  hintStyle: TextStyle(fontSize: 15),
                 ),
                 expands: true,
                 maxLines: null,
-                style: TextStyle(fontSize: 22),
+                style: TextStyle(fontSize: 15),
               ),
             ),
           ],

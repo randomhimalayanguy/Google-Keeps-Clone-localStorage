@@ -1,46 +1,77 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notes_app/Model/note_model.dart';
+import 'package:notes_app/const/colors.dart';
 
 class NotesNotifier extends StateNotifier<List<Note>> {
-  late Box<Note> box;
+  final Box<Note> box;
+  late final ValueListenable<Box<Note>> _listner;
 
-  NotesNotifier() : super([]) {
-    _init();
+  NotesNotifier(this.box) : super([]) {
+    refreshList();
+    _listner = box.listenable();
+    _listner.addListener(refreshList);
   }
 
-  Future<void> _init() async {
-    if (!Hive.isAdapterRegistered(0)) {
-      Hive.registerAdapter(NoteAdapter());
-    }
+  void refreshList() {
+    final notes = box.values.toList();
 
-    box = await Hive.openBox("notes");
+    notes.sort((a, b) {
+      if (a.isPinned != b.isPinned) {
+        return b.isPinned ? 1 : -1;
+      }
 
-    state = box.values.toList();
+      return b.updatedAt.compareTo(a.updatedAt);
+    });
+    state = notes;
   }
 
   void addNote(Note newNote) {
+    newNote = newNote.copyWith(updatedAt: DateTime.now());
+    newNote.colorValue = getColor(box.length).toARGB32();
     box.put(newNote.id, newNote);
-    state = [newNote, ...state];
+  }
+
+  void setColor(String id, int newColor) {
+    final Note? newNote = box.get(id);
+    if (newNote == null) return;
+
+    newNote.colorValue = newColor;
+    box.put(id, newNote);
   }
 
   void updateNote(Note newNote) {
-    box.put(newNote.id, newNote);
-    state = [
-      for (Note note in state)
-        if (note.id == newNote.id) note.copyWith(newNote) else note,
-    ];
+    final updatedNote = box
+        .get(newNote.id)!
+        .copyWith(
+          title: newNote.title,
+          content: newNote.content,
+          updatedAt: DateTime.now(),
+        );
+
+    box.put(updatedNote.id, updatedNote);
+  }
+
+  void pinning(String id) {
+    final bool isPinned = !box.get(id)!.isPinned;
+    final updatedNote = box.get(id)!.copyWith(isPinned: isPinned);
+    box.put(updatedNote.id, updatedNote);
   }
 
   void deleteNote(String id) {
     box.delete(id);
-    state = [
-      for (Note note in state)
-        if (note.id != id) note,
-    ];
+  }
+
+  @override
+  void dispose() {
+    _listner.removeListener(refreshList);
+    super.dispose();
   }
 }
 
-final notesProvider = StateNotifierProvider<NotesNotifier, List<Note>>(
-  (ref) => NotesNotifier(),
-);
+final notesProvider =
+    StateNotifierProvider.autoDispose<NotesNotifier, List<Note>>((ref) {
+      return NotesNotifier(Hive.box<Note>("notes"));
+    });

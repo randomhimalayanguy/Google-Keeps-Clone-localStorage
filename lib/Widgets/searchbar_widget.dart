@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_app/Providers/search_query_provider.dart';
 
-class SearchBar extends ConsumerStatefulWidget {
-  const SearchBar({super.key});
+class SearchBarWidget extends ConsumerStatefulWidget {
+  const SearchBarWidget({super.key});
 
   @override
-  ConsumerState<SearchBar> createState() => _SearchBarState();
+  ConsumerState<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
-class _SearchBarState extends ConsumerState<SearchBar> {
+class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
   final TextEditingController controller = TextEditingController();
+
+  void cancel() {
+    controller.text = "";
+    ref.read(queryProvider.notifier).state = "";
+  }
 
   @override
   void dispose() {
@@ -20,30 +25,29 @@ class _SearchBarState extends ConsumerState<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final query = ref.watch(queryProvider);
-
-    controller.text = query;
-
     return Container(
       decoration: BoxDecoration(
-        border: BoxBorder.all(),
+        border: Border.all(),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: TextField(
-          controller: controller,
-          autofocus: false,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: "Search your notes",
-            hintStyle: TextStyle(color: Colors.black),
-          ),
-          onChanged: (val) {
-            print(val);
-            ref.read(queryProvider.notifier).state = val;
-            setState(() {});
-          },
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Search Note",
+                ),
+                onChanged: (value) =>
+                    ref.read(queryProvider.notifier).state = value,
+              ),
+            ),
+            if (controller.text != "")
+              IconButton(onPressed: cancel, icon: Icon(Icons.cancel)),
+          ],
         ),
       ),
     );

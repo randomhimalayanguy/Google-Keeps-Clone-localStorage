@@ -7,7 +7,11 @@ import 'Model/note_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  // await Hive.deleteBoxFromDisk(
+  //   "notes",
+  // ); //use it when ever notes model is changed
   Hive.registerAdapter(NoteAdapter());
+  await Hive.openBox<Note>("notes");
   return runApp(ProviderScope(child: MyApp()));
 }
 

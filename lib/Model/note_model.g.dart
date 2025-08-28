@@ -20,19 +20,27 @@ class NoteAdapter extends TypeAdapter<Note> {
       id: fields[0] as String,
       title: fields[1] as String,
       content: fields[2] as String,
-    );
+      isPinned: fields[5] as bool,
+      updatedAt: fields[4] as DateTime?,
+    )..colorValue = fields[3] as int?;
   }
 
   @override
   void write(BinaryWriter writer, Note obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.content);
+      ..write(obj.content)
+      ..writeByte(3)
+      ..write(obj.colorValue)
+      ..writeByte(4)
+      ..write(obj.updatedAt)
+      ..writeByte(5)
+      ..write(obj.isPinned);
   }
 
   @override

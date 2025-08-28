@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_app/Model/note_model.dart';
-import 'package:notes_app/Providers/notes_provider.dart';
 import 'package:notes_app/Providers/selected_notes_provider.dart';
 import 'package:notes_app/Screens/notes_page.dart';
 
@@ -12,7 +11,6 @@ class NotesCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notes = ref.watch(notesProvider);
     final selectedNotes = ref.watch(selectedNotesProvider);
 
     return InkWell(
@@ -32,24 +30,41 @@ class NotesCard extends ConsumerWidget {
           border: (selectedNotes.contains(note.id))
               ? BoxBorder.all(color: Colors.blue, width: 3)
               : null,
-          // color: Colors.primaries[ % Colors.primaries.length].shade200,
-          color: Colors.primaries[2].shade200,
+          color: note.color,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                note.title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 12,
               ),
-              Text(note.content, maxLines: 16),
-            ],
-          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    note.title,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(note.content, maxLines: 16),
+                ],
+              ),
+            ),
+            if (note.isPinned)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4.0,
+                  vertical: 4,
+                ),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.push_pin),
+                ),
+              ),
+          ],
         ),
       ),
     );
