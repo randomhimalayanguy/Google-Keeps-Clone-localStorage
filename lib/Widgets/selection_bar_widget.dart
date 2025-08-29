@@ -24,7 +24,7 @@ class SelectionBar extends ConsumerWidget {
               IconButton(
                 onPressed: () =>
                     ref.read(selectedNotesProvider.notifier).empty(),
-                icon: Icon(Icons.cancel),
+                icon: const Icon(Icons.cancel),
               ),
               Text("${selectedNotes.length}"),
             ],
@@ -39,14 +39,14 @@ class SelectionBar extends ConsumerWidget {
                   }
                   ref.read(selectedNotesProvider.notifier).empty();
                 },
-                icon: Icon(Icons.push_pin),
+                icon: const Icon(Icons.push_pin),
               ),
               IconButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (context) => ColorPickerMenu(),
+                  builder: (context) => const ColorPickerMenu(),
                 ),
-                icon: Icon(Icons.color_lens),
+                icon: const Icon(Icons.color_lens),
               ),
               IconButton(
                 onPressed: () {
@@ -55,7 +55,7 @@ class SelectionBar extends ConsumerWidget {
                   }
                   ref.read(selectedNotesProvider.notifier).empty();
                 },
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
               ),
             ],
           ),

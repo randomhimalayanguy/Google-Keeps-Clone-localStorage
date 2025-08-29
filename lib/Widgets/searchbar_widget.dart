@@ -46,7 +46,7 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
               ),
             ),
             if (controller.text != "")
-              IconButton(onPressed: cancel, icon: Icon(Icons.cancel)),
+              IconButton(onPressed: cancel, icon: const Icon(Icons.cancel)),
           ],
         ),
       ),

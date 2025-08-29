@@ -9,10 +9,10 @@ void main() async {
   await Hive.initFlutter();
   // await Hive.deleteBoxFromDisk(
   //   "notes",
-  // ); //use it when ever notes model is changed
+  // ); // use it when ever Note Model is changed
   Hive.registerAdapter(NoteAdapter());
   await Hive.openBox<Note>("notes");
-  return runApp(ProviderScope(child: MyApp()));
+  return runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false);
+    return MaterialApp(
+      home: const MainApp(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }

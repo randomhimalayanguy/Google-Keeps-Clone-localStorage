@@ -14,18 +14,19 @@ class ColorPickerMenu extends ConsumerWidget {
     final selectedNotes = ref.watch(selectedNotesProvider);
     final colors = getColorList();
 
-    void clicked() {
+    // Reset selection and close dialog box
+    void closeDialog() {
       Navigator.of(context).pop();
       ref.read(selectedColor.notifier).state = null;
     }
 
     return AlertDialog(
-      title: Text("Choose a color"),
+      title: const Text("Choose a color"),
       content: SizedBox(
         height: 120,
         child: GridView.builder(
           itemCount: 8,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
@@ -47,6 +48,7 @@ class ColorPickerMenu extends ConsumerWidget {
       actions: [
         TextButton(
           onPressed: () {
+            // Setting selected color to selected notes
             if (curSelectedColor != null) {
               for (String id in selectedNotes) {
                 ref
@@ -54,11 +56,11 @@ class ColorPickerMenu extends ConsumerWidget {
                     .setColor(id, curSelectedColor.toARGB32());
               }
             }
-            clicked();
+            closeDialog();
           },
-          child: Text("Set Color"),
+          child: const Text("Set Color"),
         ),
-        TextButton(onPressed: clicked, child: Text("Cancel")),
+        TextButton(onPressed: closeDialog, child: const Text("Cancel")),
       ],
     );
   }

@@ -1,23 +1,27 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notes_app/Model/note_model.dart';
 import 'package:notes_app/const/colors.dart';
 
+// Manage Note
 class NotesNotifier extends StateNotifier<List<Note>> {
   final Box<Note> box;
+  // Listen to changes -> addition, updation or deletion of notes in memory
   late final ValueListenable<Box<Note>> _listner;
 
+  // Constructor
   NotesNotifier(this.box) : super([]) {
     refreshList();
     _listner = box.listenable();
+    // Call refreshList method, whenever there is any change
     _listner.addListener(refreshList);
   }
 
   void refreshList() {
     final notes = box.values.toList();
 
+    // Pinned elements are at the top, followed by notes based on last update
     notes.sort((a, b) {
       if (a.isPinned != b.isPinned) {
         return b.isPinned ? 1 : -1;

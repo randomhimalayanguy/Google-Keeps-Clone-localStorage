@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+// Build runner file
 part 'note_model.g.dart';
 
 @HiveType(typeId: 0)
@@ -37,6 +38,7 @@ class Note {
   // Helper to get the Color back
   Color get color => Color(colorValue ?? Colors.white.toARGB32());
 
+  // To copy the note, (when note is updated)
   Note copyWith({
     String? id,
     String? title,

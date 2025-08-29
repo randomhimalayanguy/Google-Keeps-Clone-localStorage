@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_app/Model/note_model.dart';
 import 'package:notes_app/Providers/selected_notes_provider.dart';
@@ -14,19 +14,24 @@ class NotesCard extends ConsumerWidget {
     final selectedNotes = ref.watch(selectedNotesProvider);
 
     return InkWell(
+      // Long press on note -> select it
       onLongPress: () =>
           ref.read(selectedNotesProvider.notifier).selectNote(note.id),
       onTap: () {
+        // If no note is selected -> open the note
         if (selectedNotes.isEmpty) {
           Navigator.of(
             context,
           ).push(MaterialPageRoute(builder: (context) => NotePage(note: note)));
-        } else {
+        }
+        // Add the note to selectedNote
+        else {
           ref.read(selectedNotesProvider.notifier).selectNote(note.id);
         }
       },
       child: Container(
         decoration: BoxDecoration(
+          // Show border around selected notes
           border: (selectedNotes.contains(note.id))
               ? BoxBorder.all(color: Colors.blue, width: 3)
               : null,
@@ -37,7 +42,7 @@ class NotesCard extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
+                horizontal: 8.0,
                 vertical: 12,
               ),
               child: Column(
@@ -45,11 +50,28 @@ class NotesCard extends ConsumerWidget {
                 children: [
                   Text(
                     note.title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(note.content, maxLines: 16),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 300),
+                    child: Markdown(
+                      data: note.content,
+                      softLineBreak: true,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      styleSheet: MarkdownStyleSheet(
+                        p: const TextStyle(fontSize: 14),
+                        h3: const TextStyle(fontSize: 15),
+                        h2: const TextStyle(fontSize: 16),
+                        h1: const TextStyle(fontSize: 17),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -59,7 +81,7 @@ class NotesCard extends ConsumerWidget {
                   horizontal: 4.0,
                   vertical: 4,
                 ),
-                child: Align(
+                child: const Align(
                   alignment: Alignment.topRight,
                   child: Icon(Icons.push_pin),
                 ),
